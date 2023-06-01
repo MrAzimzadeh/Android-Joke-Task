@@ -1,5 +1,5 @@
 
 @
 app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
-k
-;app/src/main/java/com/azimzada/myapplication/model/flags.kt,1\6\1673f61e3546a65f75263a5442b8f06745080b6e
+P
+ app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e

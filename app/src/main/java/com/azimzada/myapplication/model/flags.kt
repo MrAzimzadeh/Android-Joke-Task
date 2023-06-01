@@ -2,12 +2,11 @@ package com.azimzada.myapplication.model
 
 import android.text.BoringLayout
 
-data class flags(
-    val nsfw  : Boolean,
-    val religious :  Boolean ,
-    val political  : Boolean ,
-    val racist : Boolean,
-    val  sexist :  Boolean,
-    val explicit : Boolean,
-
+data class Flags(
+    var nsfw: Boolean,
+    var religious: Boolean,
+    var political: Boolean,
+    var racist: Boolean,
+    var sexist: Boolean,
+    var explicit: Boolean
 )

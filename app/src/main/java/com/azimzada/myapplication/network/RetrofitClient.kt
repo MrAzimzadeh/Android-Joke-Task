@@ -7,23 +7,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 class RetrofitClient {
-
     companion object{
-        var instance : RetrofitClient? = null
-        lateinit var api : Api
-        fun getRetrofitInstance(): RetrofitClient? {
-            if (instance == null) {
-                instance = RetrofitClient()
-                val retrofit: Retrofit = Retrofit.Builder().baseUrl(Constants.BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-                api = retrofit.create<Api>(Api::class.java)
-            }
-            return instance
+        fun getClient(baseUrl : String): Retrofit {
+            return Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create()).build()
         }
-    }
-
-    fun getApi(): Api? {
-        return api
     }
 }

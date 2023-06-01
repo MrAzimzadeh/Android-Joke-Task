@@ -6,7 +6,9 @@ import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.azimzada.myapplication.model.JokeDTO
+import com.azimzada.myapplication.Constants
+import com.azimzada.myapplication.api.Api
+import com.azimzada.myapplication.model.Jokes
 import com.azimzada.myapplication.network.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -15,43 +17,23 @@ import retrofit2.Response
 enum class State {
     SUCCESS, ERROR
 }
-class MainActivityVM : ViewModel() {
-    var result = MutableLiveData<JokeDTO?>()
-    var state = MutableLiveData<State?>()
-    fun getAnswer(context: Context) {
-        val call: Call<JokeDTO?>? = RetrofitClient.getRetrofitInstance()?.getApi()?.getAnswer()
-        Log.e("Error", call.toString())
-        call?.enqueue(object : Callback<JokeDTO?> {
-            override fun onResponse(call: Call<JokeDTO?>?, response: Response<JokeDTO?>) {
-                Log.e("Error", response.body().toString())
+class MainActivityViewModel: ViewModel() {
+    lateinit var api: Api
+    var jokesLiveData = MutableLiveData<Jokes>()
 
-                val result: JokeDTO? = response.body()
-                this@MainActivityVM.result.postValue(result)
-                if (equals(result?.error)) {
-                    this@MainActivityVM.state.postValue(State.SUCCESS)
-                } else {
-                    this@MainActivityVM.state.postValue(State.ERROR)
-                }
+    fun getJokes(context : Context) {
+        api = Constants.getApi()
+        api.getJokesData().enqueue(object: Callback<Jokes> {
+            override fun onResponse(call: Call<Jokes>, response: Response<Jokes>) {
+                val data: Jokes? = response.body()
+                this@MainActivityViewModel.jokesLiveData.postValue(data)
             }
 
-            override fun onFailure(call: Call<JokeDTO?>?, t: Throwable?) {
-                Log.e("Error", t.toString())
-                Log.e("Error", call.toString())
-
-                Toast.makeText(context, "An error has occured", Toast.LENGTH_LONG).show()
+            override fun onFailure(call: Call<Jokes>, t: Throwable) {
+                Toast.makeText(context, "An error has occurred", Toast.LENGTH_LONG).show()
             }
+
         })
 
-
     }
-
-    fun observeResult(): LiveData<JokeDTO?> {
-        return result
-    }
-
-    fun observeState(): LiveData<State?> {
-        return state
-    }
-
-
 }

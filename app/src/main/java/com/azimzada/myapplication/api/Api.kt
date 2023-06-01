@@ -1,12 +1,11 @@
 package com.azimzada.myapplication.api
 
-import com.azimzada.myapplication.model.JokeDTO
+import com.azimzada.myapplication.model.Jokes
 import retrofit2.Call
 import retrofit2.http.GET
 
 interface Api {
 
-    @GET("joke/Any")
-    fun getAnswer(): Call<JokeDTO?>?
-
+    @GET("Any")
+    fun getJokesData(): Call<Jokes>
 }

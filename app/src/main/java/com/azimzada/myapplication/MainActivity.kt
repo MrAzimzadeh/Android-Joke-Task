@@ -4,51 +4,34 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ProgressBar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.azimzada.myapplication.ViewModels.MainActivityVM
+import com.azimzada.myapplication.ViewModels.MainActivityViewModel
 import com.azimzada.myapplication.ViewModels.State
 import com.azimzada.myapplication.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel: MainActivityVM
+    lateinit var binding: ActivityMainBinding
+    lateinit var spinner: ProgressBar
+    private lateinit var viewModel: MainActivityViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        viewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
+        spinner = findViewById(R.id.progressBar)
+        spinner.visibility = View.VISIBLE
+        binding.button.setOnClickListener()
+        {
+            viewModel.getJokes(this)
 
-        viewModel = ViewModelProvider(this)[MainActivityVM::class.java]
-
-        binding.button.setOnClickListener {
-            reset()
-            viewModel.getAnswer(this)
-        }
-
-        viewModel.observeState().observe(this, Observer { state ->
-            when (state) {
-                State.SUCCESS -> {
-                    binding.JokeTV.setText(viewModel.result.value?.joke)
-                    binding.typeTV.setText(viewModel.result.value?.category)
-                    binding.textView3.setText(viewModel.result.value?.delivery)
-                }
-                State.ERROR -> {
-                    binding.JokeTV.setText("You Lost")
-                    binding.typeTV.visibility = View.GONE
-                    binding.textView3.visibility = View.GONE
-                    Log.e("error" , state.toString())
-                }
-
-                else -> {}
+            viewModel.jokesLiveData.observe(this) {
+                spinner.visibility = View.GONE
+                binding.jokesTextView.text = viewModel.jokesLiveData.value?.setup
             }
-        })
-
-
+        }
     }
 
-    fun reset() {
-        binding.JokeTV.setText("")
-    }
 }
